@@ -1,6 +1,6 @@
 <div class="container">
 <div class="row">
-  <h1>WYRDLE</h1>
+  <h1>WYRDLE #{{fiveLetterWords.indexOf(testWord)}}</h1>
   <!-- last turns -->
   <div *ngFor="let row of lastTurns" class="wyrdle-row">
     <input *ngFor="let cell of row" class="wyrdle-cell" value={{cell.letter}} class="wyrdle-cell {{cell.color}}">
