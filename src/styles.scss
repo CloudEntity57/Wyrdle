@@ -1,0 +1,60 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+.container{
+    display: flex;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.wyrdle-row{
+    display: flex;
+    margin-bottom: 10px;
+}
+.wyrdle-cell{
+    text-transform: uppercase;
+    height:50px;
+    width:50px;
+    font-size: 35px;
+    margin-right:10px;
+    text-align: center;
+    input{
+        height:inherit;
+        width:inherit;
+    }
+
+    .mat-form-field-outline{
+        height:50px;
+    }
+}
+
+.spin{
+    transform: rotateX(360deg);
+    transition: all .25s ease-in;
+}
+
+.green{
+    background-color: #6aaa64;
+    color: white;
+}
+.gray{
+    background-color: #787c7e;
+    color: white;
+}
+.orange{
+    background-color: #c9b458;
+    color: white;
+}
+button{
+    width:100%;
+    font-size: 20px;
+    height: 50px;
+    cursor:pointer;
+    &:hover{
+        background-color:#e3e4e5;
+    }
+    margin-bottom: 10px;
+}
+.difficulty{
+    padding-left:50px;
+    display:flex;
+    flex-direction: column;
+}

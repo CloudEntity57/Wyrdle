@@ -1,0 +1,37 @@
+<div class="container">
+<div class="row">
+  <h1>WYRDLE</h1>
+  <!-- last turns -->
+  <div *ngFor="let row of lastTurns" class="wyrdle-row">
+    <input *ngFor="let cell of row" class="wyrdle-cell" value={{cell.letter}} class="wyrdle-cell {{cell.color}}">
+  </div>
+  <form [formGroup]="wyrdleForm">
+    <div class="wyrdle-row">
+      <input (keyup)="nextCell(1)" id="cell1" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell1')" formControlName="cell1" matInput>
+      <input (keyup)="nextCell(2)" id="cell2" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell2')" formControlName="cell2" matInput>
+      <input (keyup)="nextCell(3)" id="cell3" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell3')" formControlName="cell3" matInput>
+      <input (keyup)="nextCell(4)" id="cell4" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell4')" formControlName="cell4" matInput>
+      <input (keyup)="isValidWord()" id="cell5" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell5')" formControlName="cell5" matInput>
+    </div>
+  </form>
+  <!-- next turns -->
+  <div *ngFor="let row of nextTurns" class="wyrdle-row">
+    <input *ngFor="let cell of row" class="wyrdle-cell" value="">
+  </div>
+  <button [disabled]="!validWord" (click)="submitForm()" mat-button>Enter</button>
+  <button (click)="startOver()" mat-button>New Game</button>
+</div>
+<div class="difficulty">
+
+<h3>Difficulty</h3>
+  <section>
+    <mat-button-toggle-group [(ngModel)]="difficulty" aria-label="Difficulty">
+      <mat-button-toggle value="easy">Easy (unlimited tries)</mat-button-toggle>
+      <mat-button-toggle value="hard">Hard (6 tries)</mat-button-toggle>
+    </mat-button-toggle-group>
+  </section>
+</div>
+
+
+</div>
+
