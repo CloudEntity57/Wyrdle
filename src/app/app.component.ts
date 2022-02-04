@@ -3,7 +3,8 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { buffer, delay, map } from 'rxjs/operators';
-import {dictionary}  from './utils/words';
+import { dictionary }  from './utils/words';
+import { fiveLetterWords } from './utils/easywords';
 // var dictionary = import('an-array-of-english-words');
 
 @Component({
@@ -23,9 +24,14 @@ export class AppComponent implements OnInit{
   public lastTurns = [];
   public nextTurns = [];
   public spinning = false;
+  public gameNumber = null;
+  public keyCommands: string[] = 'qwertyuiop'.split('');
+  public keyCommands2: string[] ='asdfghjkl'.split('');
+  public keyCommands3: string[] = 'zxcvbnm'.split('');
 
 
-  public difficulty = 'easy';
+
+  public difficulty = 'hard';
 
  
   public wyrdleForm = this.formBuilder.group({
@@ -37,13 +43,22 @@ export class AppComponent implements OnInit{
   });
 
   ngOnInit(): void {
+    this.keyCommands3.push('->');
+    this.keyCommands3.unshift('Enter');
+
       this.setDefaults();
-      dictionary.forEach(word => {
+      fiveLetterWords.forEach(word => {
         if(word.length === 5){
           this.fiveLetterWords.push(word);
         }
       });
       this.generateWord();
+  }
+  public loadGame(){
+    this.startOver();
+    const gameIndex = this.gameNumber;
+    console.log('generating game ', gameIndex)
+    this.generateWord(gameIndex);
   }
   public setDefaults(){
     this.nextTurns = [];
@@ -59,9 +74,9 @@ export class AppComponent implements OnInit{
     document.getElementById('cell1').focus();
   }
 
-  public generateWord(){
+  public generateWord(index:number = null){
     const randomIndex = Math.floor(Math.random() * this.fiveLetterWords.length);
-    this.testWord = this.fiveLetterWords[randomIndex];
+    this.testWord = index ? this.fiveLetterWords[index] : this.fiveLetterWords[randomIndex];
     console.log('OFFICIAL WORD - ', this.testWord)
   }
 
@@ -97,13 +112,19 @@ export class AppComponent implements OnInit{
   }
 
   public startOver(){
-    this.lastTurns = [];
-    this.setDefaults();
-    this.wyrdleForm.reset();
-    this.controls.forEach(control => {
-      document.getElementById(control).setAttribute('class','wyrdle-cell');
-    });
-    this.generateWord();
+    if(confirm('Sure about this?')){
+      this.lastTurns = [];
+      this.setDefaults();
+      this.wyrdleForm.reset();
+      this.controls.forEach(control => {
+        document.getElementById(control).setAttribute('class','wyrdle-cell');
+      });
+      this.generateWord();    
+    }
+  }
+
+  public registerInput(value: string){
+    console.log(value)
   }
 
   public async submitForm(){
@@ -120,6 +141,8 @@ export class AppComponent implements OnInit{
     console.log('VALID - ',this.validWord)
     let perfect = true;
     let lastRow = [];
+    
+    /** test cells while animating in real time */
     for(let i=0; i<5; i++){
       await new Promise((res) => {
         setTimeout(()=> {
