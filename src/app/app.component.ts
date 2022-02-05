@@ -57,6 +57,9 @@ export class AppComponent implements OnInit{
     }
     if(value === '<-'){
       this.currentLetter = this.manualKeyChoice ? this.currentLetter : this.currentLetter - 1;
+      if(this.currentLetter === 0){
+        this.currentLetter = 1;
+      }
       value = '';
       this.wyrdleForm.get(`cell${this.currentLetter}`).setValue(value);
       this.manualKeyChoice = false;
@@ -98,6 +101,7 @@ export class AppComponent implements OnInit{
     this.gameNumber = null;
   }
   public setDefaults(){
+    this.currentLetter = 1;
     this.nextTurns = [];
     for(let i = 0; i<5; i++){
       this.nextTurns.push([]);
