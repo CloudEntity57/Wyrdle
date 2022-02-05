@@ -10,24 +10,45 @@
         <!-- current turn -->
         <form [formGroup]="wyrdleForm">
           <div class="wyrdle-row">
-            <input (keyup)="nextCell(1)" id="cell1" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell1')" formControlName="cell1" >
-            <input (keyup)="nextCell(2)" id="cell2" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell2')" formControlName="cell2" >
-            <input (keyup)="nextCell(3)" id="cell3" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell3')" formControlName="cell3" >
-            <input (keyup)="nextCell(4)" id="cell4" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell4')" formControlName="cell4" >
-            <input (keyup)="isValidWord()" id="cell5" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell5')" formControlName="cell5" >
+            <input (keyup)="nextCell(1)" (click)="cellClicked(1)" id="cell1" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell1')" formControlName="cell1" >
+            <input (keyup)="nextCell(2)" (click)="cellClicked(2)" id="cell2" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell2')" formControlName="cell2" >
+            <input (keyup)="nextCell(3)" (click)="cellClicked(3)" id="cell3" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell3')" formControlName="cell3" >
+            <input (keyup)="nextCell(4)" (click)="cellClicked(4)" id="cell4" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell4')" formControlName="cell4" >
+            <input (keyup)="isValidWord()" (click)="cellClicked(5)" id="cell5" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell5')" formControlName="cell5" >
           </div>
         </form>
         <!-- next turns -->
         <div *ngFor="let row of nextTurns" class="wyrdle-row">
           <input *ngFor="let cell of row" class="wyrdle-cell" value="">
         </div>
-        <button [disabled]="!validWord" (click)="submitForm()" mat-stroked-button>Enter</button>
-        <div style="margin-bottom:10px;"></div>
         <button (click)="startOver()" mat-stroked-button>New Game</button>      
       </div>
 
     </div>
     <div class="col-md-6 difficulty">
+      <div class="keyboard">
+        <div class="keyboardRow">
+          <ng-container *ngFor="let char of keyCommands">
+            <div class="keyboardItem" id={{char}}>
+              <div (click)="registerInput(char)" class="keyboardLetter">{{char}}</div>
+            </div>          
+          </ng-container>
+        </div>
+        <div class="keyboardRow">
+          <ng-container *ngFor="let char of keyCommands2">
+            <div class="keyboardItem" id={{char}}>
+              <div (click)="registerInput(char)" class="keyboardLetter">{{char}}</div>
+            </div>          
+          </ng-container>
+        </div>
+        <div class="keyboardRow">
+          <ng-container *ngFor="let char of keyCommands3">
+            <div class="keyboardItem" id={{char}}>
+              <div (click)="registerInput(char)" class="keyboardLetter">{{char}}</div>
+            </div>          
+          </ng-container>
+        </div>
+      </div>
       <div class="game">
         <h3>Difficulty</h3>
         <section>
@@ -42,23 +63,7 @@
         </mat-form-field>
         <button [disabled]="!gameNumber" (click)="loadGame()" mat-stroked-button color="primary">Load</button>
       </div>
-      <div class="keyboard">
-        <div class="keyboardRow">
-          <div class="keyboardItem" *ngFor="let char of keyCommands">
-            <div (click)="registerInput(char)" class="keyboardLetter">{{char}}</div>
-          </div>          </div>
-        <div class="keyboardRow">
-          <div class="keyboardItem" *ngFor="let char of keyCommands2">
-            <div (click)="registerInput(char)" class="keyboardLetter">{{char}}</div>
-          </div>  
-          </div>
-        <div class="keyboardRow">
-          <div class="keyboardItem" *ngFor="let char of keyCommands3">
-            <div (click)="registerInput(char)" class="keyboardLetter">{{char}}</div>
-          </div>  
-          </div>
 
-      </div>
     </div>  
   </div>
 </div>

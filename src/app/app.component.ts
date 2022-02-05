@@ -28,6 +28,9 @@ export class AppComponent implements OnInit{
   public keyCommands: string[] = 'qwertyuiop'.split('');
   public keyCommands2: string[] ='asdfghjkl'.split('');
   public keyCommands3: string[] = 'zxcvbnm'.split('');
+  public allKeyCommands: string[] = [...this.keyCommands, ...this.keyCommands2, ...this.keyCommands3];
+  public currentLetter = 1;
+  public manualKeyChoice = false;
 
 
 
@@ -42,23 +45,53 @@ export class AppComponent implements OnInit{
     cell5: this.formBuilder.control(null, [Validators.required])
   });
 
+  public registerInput(value: string){
+    // if(this.currentLetter > 5 && value != 'Enter') return;
+    console.log(value)
+    if(value === 'Enter' && this.isValidWord()){
+      this.submitForm();
+      return;
+    }
+    if(value === 'Enter' && !this.isValidWord()){
+      return;
+    }
+    if(value === '<-'){
+      this.currentLetter = this.manualKeyChoice ? this.currentLetter : this.currentLetter - 1;
+      value = '';
+      this.wyrdleForm.get(`cell${this.currentLetter}`).setValue(value);
+      this.manualKeyChoice = false;
+      return;
+    }
+    if(this.currentLetter > 5) return;
+    const control = `cell${this.currentLetter}`;
+    this.wyrdleForm.get(control).setValue(value);
+    this.changeDetector.detectChanges();
+    this.currentLetter++;
+    this.manualKeyChoice = false;
+  }
+
   ngOnInit(): void {
-    this.keyCommands3.push('->');
+    this.keyCommands3.push('<-');
     this.keyCommands3.unshift('Enter');
 
-      this.setDefaults();
-      fiveLetterWords.forEach(word => {
-        if(word.length === 5){
-          this.fiveLetterWords.push(word);
-        }
-      });
-      this.generateWord();
+    this.setDefaults();
+    fiveLetterWords.forEach(word => {
+      if(word.length === 5){
+        this.fiveLetterWords.push(word);
+      }
+    });
+    this.generateWord();
+  }
+  public cellClicked(index:number){
+    this.manualKeyChoice = true;
+    this.currentLetter = index;
   }
   public loadGame(){
     this.startOver();
     const gameIndex = this.gameNumber;
     console.log('generating game ', gameIndex)
     this.generateWord(gameIndex);
+    this.gameNumber = null;
   }
   public setDefaults(){
     this.nextTurns = [];
@@ -87,7 +120,7 @@ export class AppComponent implements OnInit{
     this.isValidWord();
   }
 
-  public isValidWord(){
+  public isValidWord(): boolean{
     let letters = [];
     const results = this.wyrdleForm.value;
     console.log({results})
@@ -97,7 +130,8 @@ export class AppComponent implements OnInit{
     const submittedWord = letters.join('');
     console.log({submittedWord})
     this.validWord = submittedWord.length === 5 && dictionary.includes(submittedWord);
-    console.log('VALID - ',this.validWord)  
+    console.log('VALID - ',this.validWord);
+    return this.validWord;
   }
 
   public advanceForm(lastRow:any){
@@ -108,11 +142,15 @@ export class AppComponent implements OnInit{
     this.lastTurns.push(lastRow);
     this.nextTurns.pop();
     document.getElementById('cell1').focus();
-
+    this.validWord = false;
   }
 
   public startOver(){
     if(confirm('Sure about this?')){
+      const keysArray = Array.from(document.getElementsByClassName('keyboardItem'));
+      keysArray.forEach(key => {
+        key.setAttribute('class', 'keyboardItem');
+      })
       this.lastTurns = [];
       this.setDefaults();
       this.wyrdleForm.reset();
@@ -123,12 +161,7 @@ export class AppComponent implements OnInit{
     }
   }
 
-  public registerInput(value: string){
-    console.log(value)
-  }
-
   public async submitForm(){
-
     let letters = [];
     const results = this.wyrdleForm.value;
     console.log({results})
@@ -142,13 +175,15 @@ export class AppComponent implements OnInit{
     let perfect = true;
     let lastRow = [];
     
-    /** test cells while animating in real time */
+    /** test cells while spinning in real time */
+
     for(let i=0; i<5; i++){
       await new Promise((res) => {
         setTimeout(()=> {
           if(this.testWord[i]===letters[i]){
             console.log(letters[i],'- TRUE')
             document.getElementById(this.controls[i]).setAttribute('class','wyrdle-cell green');
+            document.getElementById(letters[i]).setAttribute('class','keyboardItem green');
             lastRow.push({
               letter:letters[i],
               color:'green'
@@ -156,6 +191,7 @@ export class AppComponent implements OnInit{
           }else if(this.testWord.includes(letters[i])){
             console.log(letters[i],'- INCLUDED ELSEWHERE')
             document.getElementById(this.controls[i]).setAttribute('class','wyrdle-cell orange');
+            document.getElementById(letters[i]).setAttribute('class','keyboardItem orange');
             perfect = false;
             lastRow.push({
               letter:letters[i],
@@ -166,7 +202,8 @@ export class AppComponent implements OnInit{
             console.log(letters[i],' not included')
             perfect = false;
             document.getElementById(this.controls[i]).setAttribute('class','wyrdle-cell gray');
-                lastRow.push({
+            document.getElementById(letters[i]).setAttribute('class','keyboardItem gray');
+            lastRow.push({
               letter:letters[i],
               color:'gray'
             });
@@ -183,6 +220,8 @@ export class AppComponent implements OnInit{
         return;
       }
     }
+
+    
     if(this.difficulty === 'hard' && !perfect && this.validWord && this.lastTurns.length >= 5){
       this.lose();
       return;
@@ -190,6 +229,7 @@ export class AppComponent implements OnInit{
     setTimeout(()=> {
       this.spinningCells = [];
       this.advanceForm(lastRow);
+      this.currentLetter = 1;
     }, 1000)
 
   }
