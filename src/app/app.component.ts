@@ -70,6 +70,10 @@ export class AppComponent implements OnInit{
     this.manualKeyChoice = false;
   }
 
+  public isEnterKey(char){
+    return char === 'Enter';
+  }
+
   ngOnInit(): void {
     this.keyCommands3.push('<-');
     this.keyCommands3.unshift('Enter');

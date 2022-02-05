@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 gridContainer">
       <div class="game">
         <h1>WYRDLE #{{fiveLetterWords.indexOf(testWord)}}</h1>
         <!-- last turns -->
@@ -27,42 +27,44 @@
     </div>
     <div class="col-md-6 difficulty">
       <div class="keyboard">
-        <div class="keyboardRow">
+        <div class="keyboardRow-1">
           <ng-container *ngFor="let char of keyCommands">
             <div class="keyboardItem" id={{char}}>
               <div (click)="registerInput(char)" class="keyboardLetter">{{char}}</div>
             </div>          
           </ng-container>
         </div>
-        <div class="keyboardRow">
+        <div class="keyboardRow-2">
           <ng-container *ngFor="let char of keyCommands2">
             <div class="keyboardItem" id={{char}}>
               <div (click)="registerInput(char)" class="keyboardLetter">{{char}}</div>
             </div>          
           </ng-container>
         </div>
-        <div class="keyboardRow">
+        <div class="keyboardRow-3">
           <ng-container *ngFor="let char of keyCommands3">
-            <div class="keyboardItem" id={{char}}>
+            <div class="keyboardItem" id={{char}} [class.enter]="isEnterKey(char)">
               <div (click)="registerInput(char)" class="keyboardLetter">{{char}}</div>
             </div>          
           </ng-container>
         </div>
       </div>
-      <div class="game">
-        <h3>Difficulty</h3>
-        <section>
-          <mat-button-toggle-group [(ngModel)]="difficulty" aria-label="Difficulty">
-            <mat-button-toggle value="hard">Hard (6 tries)</mat-button-toggle>
-            <mat-button-toggle value="easy">Easy (unlimited)</mat-button-toggle>
-          </mat-button-toggle-group>
-        </section>
-        <mat-form-field>
-          <mat-label>Load a specific game #</mat-label>
-          <input [(ngModel)]="gameNumber" matInput >
-        </mat-form-field>
-        <button [disabled]="!gameNumber" (click)="loadGame()" mat-stroked-button color="primary">Load</button>
-      </div>
+      <div class="text-center">
+        <div class="game">
+          <h3>Difficulty</h3>
+          <section>
+            <mat-button-toggle-group [(ngModel)]="difficulty" aria-label="Difficulty">
+              <mat-button-toggle value="hard">Hard (6 tries)</mat-button-toggle>
+              <mat-button-toggle value="easy">Easy (unlimited)</mat-button-toggle>
+            </mat-button-toggle-group>
+          </section>
+          <mat-form-field>
+            <mat-label>Load a specific game #</mat-label>
+            <input [(ngModel)]="gameNumber" matInput >
+          </mat-form-field>
+          <button [disabled]="!gameNumber" (click)="loadGame()" mat-stroked-button color="primary">Load</button>
+        </div>
+        </div>
 
     </div>  
   </div>
