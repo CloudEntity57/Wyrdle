@@ -1,9 +1,71 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
-.container{
-    display: flex;
-    justify-content: center;
-    font-family: Arial, Helvetica, sans-serif;
+// .container{
+//     display: flex;
+//     justify-content: center;
+//     font-family: Arial, Helvetica, sans-serif;
+// }
+
+
+
+.keyboardItem{
+    display:inline-block;
+    height:50px;
+    min-width:35px;
+    padding:5px;
+    background-color: #d3d6da;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    .keyboardLetter{
+        display: flex;
+        height: 100%;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        font-size: 2vw;
+        text-transform: uppercase;
+    }
+    @media(min-width: 1500px){
+        min-width: 45px;
+        height:55px;
+    }
 }
+.keyboardLetter, .wyrdle-cell{
+    @media(max-width: 550px){
+        font-size: 5vw !important;
+    }
+    @media(min-width: 1975px){
+        font-size: 1.75vw !important;
+    }
+    @media(min-width: 3000px){
+        font-size: 1vw !important;
+    }
+}
+
+.enter{
+    width:10vw;
+}
+
+.keyboard{
+    margin-top:15px;
+    text-align: center;
+}
+
+.keyboardRow {
+    // &-1{
+    //     width:45vw;
+    // }
+    // &-2{
+    //     width:35vw;
+    // }
+    // &-3{
+    //     width:50vw;
+    // }
+    display: flex;
+    justify-content: space-around;
+}
+
 
 .wyrdle-row{
     display: flex;
@@ -13,7 +75,7 @@
     text-transform: uppercase;
     height:50px;
     width:50px;
-    font-size: 35px;
+    font-size: 2vw;
     margin-right:10px;
     text-align: center;
     input{
@@ -47,14 +109,20 @@ button{
     width:100%;
     font-size: 20px;
     height: 50px;
-    cursor:pointer;
-    &:hover{
-        background-color:#e3e4e5;
-    }
-    margin-bottom: 10px;
 }
 .difficulty{
-    padding-left:50px;
+    // padding-left:50px;
     display:flex;
     flex-direction: column;
+}
+.text-center{
+    display: flex;
+    justify-content: space-around;
+}
+.game{
+    width:50%;
+    display: inline-block;
+}
+.gridContainer{
+    text-align: center;
 }
