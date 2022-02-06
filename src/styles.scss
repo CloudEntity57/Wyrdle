@@ -146,7 +146,9 @@ button{
     display: inline-block;
     @media(max-width:400px){
         width:100%;
-        display:block;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 }
 .gridContainer{
