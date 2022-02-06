@@ -8,7 +8,7 @@
 
 
 .keyboardItem{
-    @media only screen and (max-width:400px) {
+    @media only screen and (max-width:475px) {
         min-width:25px;
     }
     @media(min-width: 1500px){
@@ -44,17 +44,17 @@
         }
     }
 }
-.keyboardLetter, .wyrdle-cell{
-    @media(max-width: 550px){
-        font-size: 5vw;
-    }
-    @media(min-width: 1975px){
-        font-size: 1.75vw;
-    }
-    @media(min-width: 3000px){
-        font-size: 1vw;
-    }
-}
+// .keyboardLetter, .wyrdle-cell{
+//     @media(max-width: 550px){
+//         font-size: 5vw;
+//     }
+//     @media(min-width: 1975px){
+//         font-size: 1.75vw;
+//     }
+//     @media(min-width: 3000px){
+//         font-size: 1vw;
+//     }
+// }
 
 .enter{
     width:10vw;
@@ -144,7 +144,7 @@ button{
 .game{
     width:50%;
     display: inline-block;
-    @media(max-width:400px){
+    @media(max-width:475px){
         width:100%;
         display: flex;
         flex-direction: column;
