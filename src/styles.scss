@@ -8,7 +8,7 @@
 
 
 .keyboardItem{
-    @media only screen and (max-width:475px) {
+    @media only screen and (max-width:500px) {
         min-width:25px;
     }
     @media(min-width: 1500px){
@@ -144,7 +144,7 @@ button{
 .game{
     width:50%;
     display: inline-block;
-    @media(max-width:475px){
+    @media(max-width:500px){
         width:100%;
         display: flex;
         flex-direction: column;
