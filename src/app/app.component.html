@@ -5,7 +5,7 @@
         <h1>WYRDLE #{{fiveLetterWords.indexOf(testWord)}}</h1>
         <!-- last turns -->
         <div *ngFor="let row of lastTurns" class="wyrdle-row">
-          <input *ngFor="let cell of row" class="wyrdle-cell" value={{cell.letter}} class="wyrdle-cell {{cell.color}}">
+          <input *ngFor="let cell of row" disabled class="wyrdle-cell" value={{cell.letter}} class="wyrdle-cell {{cell.color}}">
         </div>
         <!-- current turn -->
         <form [formGroup]="wyrdleForm">
@@ -19,7 +19,7 @@
         </form>
         <!-- next turns -->
         <div *ngFor="let row of nextTurns" class="wyrdle-row">
-          <input *ngFor="let cell of row" class="wyrdle-cell" value="">
+          <input disabled *ngFor="let cell of row" class="wyrdle-cell" value="">
         </div>
         <button (click)="startOver()" mat-stroked-button>New Game</button>      
       </div>
