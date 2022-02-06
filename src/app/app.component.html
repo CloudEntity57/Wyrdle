@@ -42,6 +42,9 @@
           </ng-container>
         </div>
         <div class="keyboardRow-3">
+          <div class="keyboardItem enter" id="Enter">
+            <div (click)="registerInput('Enter')" class="keyboardLetter">Enter</div>
+          </div>  
           <ng-container *ngFor="let char of keyCommands3">
             <div class="keyboardItem" id={{char}} [class.enter]="isEnterKey(char)">
               <div (click)="registerInput(char)" class="keyboardLetter">{{char}}</div>

@@ -79,7 +79,7 @@ export class AppComponent implements OnInit{
 
   ngOnInit(): void {
     this.keyCommands3.push('<-');
-    this.keyCommands3.unshift('Enter');
+    // this.keyCommands3.unshift('Enter');
 
     this.setDefaults();
     fiveLetterWords.forEach(word => {
