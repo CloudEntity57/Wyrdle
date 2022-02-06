@@ -8,6 +8,13 @@
 
 
 .keyboardItem{
+    @media only screen and (max-width:400px) {
+        min-width:25px;
+    }
+    @media(min-width: 1500px){
+        min-width: 45px;
+        height:55px;
+    }
     display:inline-block;
     height:50px;
     min-width:35px;
@@ -16,6 +23,7 @@
     margin-right: 5px;
     margin-bottom: 5px;
     border-radius: 4px;
+
     cursor: pointer;
     .keyboardLetter{
         display: flex;
@@ -25,21 +33,26 @@
         align-items: center;
         font-size: 2vw;
         text-transform: uppercase;
-    }
-    @media(min-width: 1500px){
-        min-width: 45px;
-        height:55px;
+        @media(max-width: 550px){
+            font-size: 5vw;
+        }
+        @media(min-width: 1975px){
+            font-size: 1.75vw;
+        }
+        @media(min-width: 3000px){
+            font-size: 1vw;
+        }
     }
 }
 .keyboardLetter, .wyrdle-cell{
     @media(max-width: 550px){
-        font-size: 5vw !important;
+        font-size: 5vw;
     }
     @media(min-width: 1975px){
-        font-size: 1.75vw !important;
+        font-size: 1.75vw;
     }
     @media(min-width: 3000px){
-        font-size: 1vw !important;
+        font-size: 1vw;
     }
 }
 
@@ -86,6 +99,15 @@
     .mat-form-field-outline{
         height:50px;
     }
+    @media(max-width: 550px){
+        font-size: 5vw;
+    }
+    @media(min-width: 1975px){
+        font-size: 1.75vw;
+    }
+    @media(min-width: 3000px){
+        font-size: 1vw;
+    }
 }
 
 .spin{
@@ -122,6 +144,10 @@ button{
 .game{
     width:50%;
     display: inline-block;
+    @media(max-width:400px){
+        width:100%;
+        display:block;
+    }
 }
 .gridContainer{
     text-align: center;
