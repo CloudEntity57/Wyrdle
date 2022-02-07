@@ -2,26 +2,28 @@
   <div class="row">
     <div class="col-lg-6 gridContainer">
       <div class="game">
-        <h1>WYRDLE #{{fiveLetterWords.indexOf(testWord)}}</h1>
-        <!-- last turns -->
-        <div *ngFor="let row of lastTurns" class="wyrdle-row">
-          <input *ngFor="let cell of row" disabled class="wyrdle-cell" value={{cell.letter}} class="wyrdle-cell {{cell.color}}">
-        </div>
-        <!-- current turn -->
-        <form [formGroup]="wyrdleForm">
-          <div class="wyrdle-row">
-            <input (keyup)="nextCell(1)" (click)="cellClicked(1)" id="cell1" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell1')" formControlName="cell1" >
-            <input (keyup)="nextCell(2)" (click)="cellClicked(2)" id="cell2" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell2')" formControlName="cell2" >
-            <input (keyup)="nextCell(3)" (click)="cellClicked(3)" id="cell3" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell3')" formControlName="cell3" >
-            <input (keyup)="nextCell(4)" (click)="cellClicked(4)" id="cell4" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell4')" formControlName="cell4" >
-            <input (keyup)="isValidWord()" (click)="cellClicked(5)" id="cell5" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell5')" formControlName="cell5" >
+        <div class="game-inner">
+          <h1>WYRDLE #{{fiveLetterWords.indexOf(testWord)}}</h1>
+          <!-- last turns -->
+          <div *ngFor="let row of lastTurns" class="wyrdle-row">
+            <input *ngFor="let cell of row" disabled class="wyrdle-cell" value={{cell.letter}} class="wyrdle-cell {{cell.color}}">
           </div>
-        </form>
-        <!-- next turns -->
-        <div *ngFor="let row of nextTurns" class="wyrdle-row">
-          <input disabled *ngFor="let cell of row" class="wyrdle-cell" value="">
-        </div>
-        <button (click)="startOver()" mat-stroked-button>New Game</button>      
+          <!-- current turn -->
+          <form [formGroup]="wyrdleForm">
+            <div class="wyrdle-row">
+              <input (keyup)="nextCell(1)" (click)="cellClicked(1)" id="cell1" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell1')" formControlName="cell1" >
+              <input (keyup)="nextCell(2)" (click)="cellClicked(2)" id="cell2" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell2')" formControlName="cell2" >
+              <input (keyup)="nextCell(3)" (click)="cellClicked(3)" id="cell3" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell3')" formControlName="cell3" >
+              <input (keyup)="nextCell(4)" (click)="cellClicked(4)" id="cell4" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell4')" formControlName="cell4" >
+              <input (keyup)="isValidWord()" (click)="cellClicked(5)" id="cell5" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell5')" formControlName="cell5" >
+            </div>
+          </form>
+          <!-- next turns -->
+          <div *ngFor="let row of nextTurns" class="wyrdle-row">
+            <input disabled *ngFor="let cell of row" class="wyrdle-cell" value="">
+          </div>
+          <button (click)="startOver()" mat-stroked-button>New Game</button>      
+          </div>
       </div>
 
     </div>
