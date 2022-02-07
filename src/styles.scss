@@ -9,7 +9,7 @@
 
 .keyboardItem{
     @media only screen and (max-width:500px) {
-        min-width:25px;
+        min-width:29px;
     }
     @media(min-width: 1500px){
         min-width: 45px;
@@ -44,17 +44,6 @@
         }
     }
 }
-// .keyboardLetter, .wyrdle-cell{
-//     @media(max-width: 550px){
-//         font-size: 5vw;
-//     }
-//     @media(min-width: 1975px){
-//         font-size: 1.75vw;
-//     }
-//     @media(min-width: 3000px){
-//         font-size: 1vw;
-//     }
-// }
 
 .enter{
     width:auto;
@@ -66,15 +55,6 @@
 }
 
 .keyboardRow {
-    // &-1{
-    //     width:45vw;
-    // }
-    // &-2{
-    //     width:35vw;
-    // }
-    // &-3{
-    //     width:50vw;
-    // }
     display: flex;
     justify-content: space-around;
 }
@@ -142,13 +122,14 @@ button{
     justify-content: space-around;
 }
 .game{
-    width:50%;
     display: inline-block;
-    @media(max-width:500px){
-        width:100%;
+    .game-inner{
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: center;        }
+    width:50%;
+    @media(max-width:500px){
+        width:100%;
     }
 }
 .gridContainer{
