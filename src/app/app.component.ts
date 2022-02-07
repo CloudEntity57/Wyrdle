@@ -1,10 +1,10 @@
 import { Placeholder } from '@angular/compiler/src/i18n/i18n_ast';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { buffer, delay, map } from 'rxjs/operators';
 import { dictionary }  from './utils/words';
-import { fiveLetterWords } from './utils/easywords';
+import { easyWords } from './utils/easywords';
 // var dictionary = import('an-array-of-english-words');
 
 @Component({
@@ -12,14 +12,15 @@ import { fiveLetterWords } from './utils/easywords';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit, AfterViewInit{
   
   constructor(private formBuilder: FormBuilder, private changeDetector: ChangeDetectorRef){
   }
-  public fiveLetterWords = [];
+  public correctLetterWords = [];
   public testWord = "wrung";
   public validWord = false;
-  public controls = ['cell1','cell2','cell3','cell4','cell5'];
+  public controls = [];
+  public letterIndexes = [];
   public spinningCells: string[] = [];
   public lastTurns = [];
   public nextTurns = [];
@@ -28,22 +29,66 @@ export class AppComponent implements OnInit{
   public keyCommands: string[] = 'qwertyuiop'.split('');
   public keyCommands2: string[] ='asdfghjkl'.split('');
   public keyCommands3: string[] = 'zxcvbnm'.split('');
-  public allKeyCommands: string[] = [...this.keyCommands, ...this.keyCommands2, ...this.keyCommands3];
   public currentLetter = 1;
   public manualKeyChoice = false;
-
-
+  public lettersInWord: number = null;
+  public isPageLoading = true;
 
   public difficulty = 'hard';
-
  
-  public wyrdleForm = this.formBuilder.group({
-    cell1: this.formBuilder.control(null, [Validators.required]),
-    cell2: this.formBuilder.control(null, [Validators.required]),
-    cell3: this.formBuilder.control(null, [Validators.required]),
-    cell4: this.formBuilder.control(null, [Validators.required]),
-    cell5: this.formBuilder.control(null, [Validators.required])
-  });
+  public wyrdleForm = this.formBuilder.group({});
+
+
+  ngOnInit(): void {
+    // this.generateForm();
+    this.filterWords();
+    this.keyCommands3.push('<-');
+    // this.generateWord();
+    // this.setDefaults();
+  } 
+  public filterWords(){
+    for(let i=1; i<= this.lettersInWord; i++){
+      this.controls.push(`cell${i}`);
+      this.letterIndexes.push(i);
+    }  
+    let wordsArray = easyWords.split('\n');
+    console.log('wordsArray: ', wordsArray)
+    let filteredWords = wordsArray.filter(word => word.length === this.lettersInWord);
+    console.log('filteredWords: ', filteredWords)
+
+    this.correctLetterWords = filteredWords.map(word => {
+      // if(word.length === this.lettersInWord){
+      //   this.correctLetterWords.push(word);
+      // }
+      return (word.length === this.lettersInWord) ? word : null;
+    });
+    console.log('correctLetteredWords: ', this.correctLetterWords)
+  }
+  public setupGame(){
+    this.generateForm();
+    console.log('lettersInWord: ', this.lettersInWord)
+
+    setTimeout(()=>{
+      this.isPageLoading = false;
+      this.filterWords();
+      this.generateForm();
+      this.setDefaults();
+      this.generateWord();
+      document.getElementById('cell1').focus();
+
+    },250)
+
+  }
+  
+  ngAfterViewInit(){
+    // document.getElementById('cell1').focus();
+  }
+
+  public generateForm(){
+    for(let i=1; i<=this.lettersInWord; i++){
+      this.wyrdleForm.addControl(`cell${i}`, this.formBuilder.control(null, [Validators.required]));
+    }
+  }
 
   public registerInput(value: string){
     // if(this.currentLetter > 5 && value != 'Enter') return;
@@ -65,7 +110,7 @@ export class AppComponent implements OnInit{
       this.manualKeyChoice = false;
       return;
     }
-    if(this.currentLetter > 5) return;
+    if(this.currentLetter > this.lettersInWord) return;
     const control = `cell${this.currentLetter}`;
     this.wyrdleForm.get(control).setValue(value);
     this.changeDetector.detectChanges();
@@ -77,18 +122,6 @@ export class AppComponent implements OnInit{
     return char === 'Enter';
   }
 
-  ngOnInit(): void {
-    this.keyCommands3.push('<-');
-    // this.keyCommands3.unshift('Enter');
-
-    this.setDefaults();
-    fiveLetterWords.forEach(word => {
-      if(word.length === 5){
-        this.fiveLetterWords.push(word);
-      }
-    });
-    this.generateWord();
-  }
   public cellClicked(index:number){
     this.manualKeyChoice = true;
     this.currentLetter = index;
@@ -96,28 +129,26 @@ export class AppComponent implements OnInit{
   public loadGame(){
     this.startOver();
     const gameIndex = this.gameNumber;
-    console.log('generating game ', gameIndex)
-    this.generateWord(gameIndex);
+    this.generateWord(gameIndex); 
     this.gameNumber = null;
   }
   public setDefaults(){
     this.currentLetter = 1;
     this.nextTurns = [];
-    for(let i = 0; i<5; i++){
+    for(let i = 0; i<this.lettersInWord; i++){
       this.nextTurns.push([]);
-      for(let x = 0; x<5; x++){
+      for(let x = 0; x<this.lettersInWord; x++){
         this.nextTurns[i].push({
           letter: '',
           color: 'white'
         });
       }
     }
-    document.getElementById('cell1').focus();
   }
 
   public generateWord(index:number = null){
-    const randomIndex = Math.floor(Math.random() * this.fiveLetterWords.length);
-    this.testWord = index ? this.fiveLetterWords[index] : this.fiveLetterWords[randomIndex];
+    const randomIndex = Math.floor(Math.random() * this.correctLetterWords.length);
+    this.testWord = index ? this.correctLetterWords[index] : this.correctLetterWords[randomIndex];
     console.log('OFFICIAL WORD - ', this.testWord)
   }
 
@@ -137,7 +168,7 @@ export class AppComponent implements OnInit{
     }
     const submittedWord = letters.join('');
     console.log({submittedWord})
-    this.validWord = submittedWord.length === 5 && dictionary.includes(submittedWord);
+    this.validWord = submittedWord.length === this.lettersInWord && dictionary.includes(submittedWord);
     console.log('VALID - ',this.validWord);
     return this.validWord;
   }
@@ -185,7 +216,7 @@ export class AppComponent implements OnInit{
     
     /** test cells while spinning in real time */
 
-    for(let i=0; i<5; i++){
+    for(let i=0; i<this.lettersInWord; i++){
       await new Promise((res) => {
         setTimeout(()=> {
           if(this.testWord[i]===letters[i]){
@@ -223,14 +254,14 @@ export class AppComponent implements OnInit{
           },350);
           this.changeDetector.detectChanges();
       });
-      if(perfect && i===4){
+      if(perfect && i===this.lettersInWord - 1){
         this.win();
         return;
       }
     }
 
     
-    if(this.difficulty === 'hard' && !perfect && this.validWord && this.lastTurns.length >= 5){
+    if(this.difficulty === 'hard' && !perfect && this.validWord && this.lastTurns.length >= this.lettersInWord){
       this.lose();
       return;
     }

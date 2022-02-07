@@ -1,9 +1,9 @@
-<div class="container">
+<div *ngIf="!isPageLoading" class="container">
   <div class="row">
     <div class="col-lg-6 gridContainer">
       <div class="game">
         <div class="game-inner">
-          <h1>WYRDLE #{{fiveLetterWords.indexOf(testWord)}}</h1>
+          <h1>WYRDLE #{{correctLetterWords.indexOf(testWord)}}({{lettersInWord}} ltr)</h1>
           <!-- last turns -->
           <div *ngFor="let row of lastTurns" class="wyrdle-row">
             <input *ngFor="let cell of row" disabled class="wyrdle-cell" value={{cell.letter}} class="wyrdle-cell {{cell.color}}">
@@ -11,11 +11,7 @@
           <!-- current turn -->
           <form [formGroup]="wyrdleForm">
             <div class="wyrdle-row">
-              <input (keyup)="nextCell(1)" (click)="cellClicked(1)" id="cell1" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell1')" formControlName="cell1" >
-              <input (keyup)="nextCell(2)" (click)="cellClicked(2)" id="cell2" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell2')" formControlName="cell2" >
-              <input (keyup)="nextCell(3)" (click)="cellClicked(3)" id="cell3" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell3')" formControlName="cell3" >
-              <input (keyup)="nextCell(4)" (click)="cellClicked(4)" id="cell4" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell4')" formControlName="cell4" >
-              <input (keyup)="isValidWord()" (click)="cellClicked(5)" id="cell5" maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning('cell5')" formControlName="cell5" >
+              <input *ngFor="let cellIndex of letterIndexes" (keyup)="nextCell(cellIndex)" (click)="cellClicked(1)" id={{controls[cellIndex-1]}} maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning(controls[cellIndex-1])" formControlName={{controls[cellIndex-1]}} >
             </div>
           </form>
           <!-- next turns -->
@@ -59,7 +55,7 @@
           <h3>Difficulty</h3>
           <section>
             <mat-button-toggle-group [(ngModel)]="difficulty" aria-label="Difficulty">
-              <mat-button-toggle value="hard">Hard (6 tries)</mat-button-toggle>
+              <mat-button-toggle value="hard">Hard ({{lettersInWord+1}} tries)</mat-button-toggle>
               <mat-button-toggle value="easy">Easy (unlimited)</mat-button-toggle>
             </mat-button-toggle-group>
           </section>
@@ -70,8 +66,17 @@
           <button [disabled]="!gameNumber" (click)="loadGame()" mat-stroked-button color="primary">Load</button>
         </div>
         </div>
-
     </div>  
   </div>
+
+</div>
+<div class="letterModal" [class.hidden]="!isPageLoading">
+  <div class="modalContents">
+    <mat-form-field>
+      <mat-label>Choose number of letters</mat-label>
+      <input type="number" [(ngModel)]="lettersInWord" matInput >
+    </mat-form-field>
+    <button [disabled]="!lettersInWord" (click)="setupGame()" mat-stroked-button color="primary">Load</button>
+    </div>
 </div>
 

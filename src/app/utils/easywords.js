@@ -2999,6 +2999,6 @@ yourself
 youth
 zone`;
 
-let wordsArray = words.split('\n');
-export const fiveLetterWords = wordsArray.filter(word => word.length === 5);
+export const easyWords = words;
+
 
