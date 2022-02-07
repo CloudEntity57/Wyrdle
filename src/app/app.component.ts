@@ -60,7 +60,7 @@ export class AppComponent implements OnInit, AfterViewInit{
       // if(word.length === this.lettersInWord){
       //   this.correctLetterWords.push(word);
       // }
-      return (word.length === this.lettersInWord) ? word : null;
+      return (word.length === this.lettersInWord) ? word.toLowerCase() : null;
     });
     console.log('correctLetteredWords: ', this.correctLetterWords)
   }
