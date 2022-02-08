@@ -33,6 +33,8 @@ export class AppComponent implements OnInit, AfterViewInit{
   public manualKeyChoice = false;
   public lettersInWord: number = null;
   public isPageLoading = true;
+  public isGameWon = false;
+  public copySuccess = false;
 
   public difficulty = 'hard';
  
@@ -40,11 +42,8 @@ export class AppComponent implements OnInit, AfterViewInit{
 
 
   ngOnInit(): void {
-    // this.generateForm();
     this.filterWords();
     this.keyCommands3.push('<-');
-    // this.generateWord();
-    // this.setDefaults();
   } 
   public filterWords(){
     for(let i=1; i<= this.lettersInWord; i++){
@@ -149,6 +148,14 @@ export class AppComponent implements OnInit, AfterViewInit{
   public generateWord(index:number = null){
     const randomIndex = Math.floor(Math.random() * this.correctLetterWords.length);
     this.testWord = index ? this.correctLetterWords[index] : this.correctLetterWords[randomIndex];
+    if(!this.testWord){
+      this.isPageLoading = true;
+      this.lettersInWord = null
+      this.letterIndexes = [];
+      this.setDefaults();
+      this.generateForm();
+      alert('Please try again');
+    }
     console.log('OFFICIAL WORD - ', this.testWord)
   }
 
@@ -274,7 +281,8 @@ export class AppComponent implements OnInit, AfterViewInit{
   }
   public win(){
     setTimeout(()=>{
-      alert('YOU WIN')
+      // alert('YOU WIN')
+      this.isGameWon = true;
     },400)
   }
   public lose(){
@@ -283,8 +291,45 @@ export class AppComponent implements OnInit, AfterViewInit{
     },400)
   }
 
+  public share(){
+      let shareText = `Wyrdle ${this.correctLetterWords.indexOf(this.testWord)}(${this.lettersInWord} ltrs) ${this.lastTurns.length + 1}/${this.difficulty === 'hard' ? this.lettersInWord+1 : 'unlimited'}\n`;
+      console.log('last turns ', this.lastTurns);
+      this.lastTurns.forEach(turn =>{
+        turn.forEach(attempt => {
+          switch(attempt.color){
+            case 'gray':
+              shareText+="⬜ ";
+              break;
+            case 'orange':
+              shareText+="🟨 ";
+              break;
+            case 'green':
+              shareText+="🟩 ";
+            break;
+          }
+        });
+        shareText+=`\n`;
+      });
+      for(let i=0; i<this.lettersInWord; i++){
+        shareText+='🟩 ';
+      }
+      console.log({shareText})
+      navigator.clipboard.writeText(shareText).then(() => {
+          this.copySuccess = true;
+          this.changeDetector.detectChanges();
+          setTimeout(()=>{
+            this.isGameWon = false;
+            this.copySuccess = false;
+          },1500);
+      })
+  }
+
   public isSpinning(item: string): boolean{
     return this.spinningCells.includes(item);
+  }
+
+  public get successButtonText(){
+    return this.copySuccess === true ? 'Results copied to clipboard' : 'Share';
   }
 
 }

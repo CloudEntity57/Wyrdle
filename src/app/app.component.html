@@ -72,11 +72,19 @@
 </div>
 <div class="letterModal" [class.hidden]="!isPageLoading">
   <div class="modalContents">
+    <h1>WYRDLE</h1>
     <mat-form-field>
       <mat-label>Choose number of letters</mat-label>
       <input type="number" [(ngModel)]="lettersInWord" matInput >
     </mat-form-field>
     <button [disabled]="!lettersInWord" (click)="setupGame()" mat-stroked-button color="primary">Load</button>
+    </div>
+</div>
+
+<div class="letterModal" [class.hidden]="!isGameWon">
+  <div class="modalContents">
+    <h1>YOU WIN</h1>
+      <button (click)="share()" mat-stroked-button class="green">{{successButtonText}}</button>    
     </div>
 </div>
 
