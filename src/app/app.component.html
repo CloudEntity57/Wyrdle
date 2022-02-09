@@ -1,4 +1,5 @@
 <div *ngIf="!isPageLoading" class="container">
+  <div class="header"></div>
   <div class="row">
     <div class="col-lg-6 gridContainer">
       <div class="game">
@@ -18,7 +19,6 @@
           <div *ngFor="let row of nextTurns" class="wyrdle-row">
             <input disabled *ngFor="let cell of row" class="wyrdle-cell" value="">
           </div>
-          <button (click)="startOver()" mat-stroked-button>New Game</button>      
           </div>
       </div>
 
@@ -63,13 +63,27 @@
             <mat-label>Load a specific game #</mat-label>
             <input [(ngModel)]="gameNumber" matInput >
           </mat-form-field>
-          <button [disabled]="!gameNumber" (click)="loadGame()" mat-stroked-button color="primary">Load</button>
+          <button style="margin-bottom: 10px;" [disabled]="!gameNumber" (click)="loadGame()" mat-stroked-button color="primary">Load</button>
+          <button (click)="startOver()" mat-stroked-button>New Game</button>      
+
         </div>
         </div>
     </div>  
   </div>
 
 </div>
+
+<div (click)="modalBlur(true)" class="letterModal" [class.hidden]="!isGameWon">
+</div>
+
+<div class="modalContentsHolder" [class.hidden]="!isGameWon">
+  <div class="modalContents">
+    <h1>YOU WIN</h1>
+    <button (click)="share()" mat-stroked-button class="green">{{successButtonText}}</button>
+    <button (click)="modalBlur(true)" mat-stroked-button>Close</button>
+  </div>
+</div>
+
 <div class="letterModal" [class.hidden]="!isPageLoading">
   <div class="modalContents">
     <h1>WYRDLE</h1>
@@ -81,10 +95,7 @@
     </div>
 </div>
 
-<div class="letterModal" [class.hidden]="!isGameWon">
-  <div class="modalContents">
-    <h1>YOU WIN</h1>
-      <button (click)="share()" mat-stroked-button class="green">{{successButtonText}}</button>    
-    </div>
-</div>
+
+
+
 

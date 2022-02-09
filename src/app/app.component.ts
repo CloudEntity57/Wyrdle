@@ -1,18 +1,14 @@
-import { Placeholder } from '@angular/compiler/src/i18n/i18n_ast';
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable, of } from 'rxjs';
-import { buffer, delay, map } from 'rxjs/operators';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { dictionary }  from './utils/words';
 import { easyWords } from './utils/easywords';
-// var dictionary = import('an-array-of-english-words');
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, AfterViewInit{
+export class AppComponent implements OnInit{
   
   constructor(private formBuilder: FormBuilder, private changeDetector: ChangeDetectorRef){
   }
@@ -51,21 +47,14 @@ export class AppComponent implements OnInit, AfterViewInit{
       this.letterIndexes.push(i);
     }  
     let wordsArray = easyWords.split('\n');
-    console.log('wordsArray: ', wordsArray)
     let filteredWords = wordsArray.filter(word => word.length === this.lettersInWord);
-    console.log('filteredWords: ', filteredWords)
 
     this.correctLetterWords = filteredWords.map(word => {
-      // if(word.length === this.lettersInWord){
-      //   this.correctLetterWords.push(word);
-      // }
       return (word.length === this.lettersInWord) ? word.toLowerCase() : null;
     });
-    console.log('correctLetteredWords: ', this.correctLetterWords)
   }
   public setupGame(){
     this.generateForm();
-    console.log('lettersInWord: ', this.lettersInWord)
 
     setTimeout(()=>{
       this.isPageLoading = false;
@@ -73,15 +62,10 @@ export class AppComponent implements OnInit, AfterViewInit{
       this.generateForm();
       this.setDefaults();
       this.generateWord();
-      document.getElementById('cell1').focus();
-
     },250)
 
   }
-  
-  ngAfterViewInit(){
-    // document.getElementById('cell1').focus();
-  }
+
 
   public generateForm(){
     for(let i=1; i<=this.lettersInWord; i++){
@@ -90,8 +74,6 @@ export class AppComponent implements OnInit, AfterViewInit{
   }
 
   public registerInput(value: string){
-    // if(this.currentLetter > 5 && value != 'Enter') return;
-    console.log(value)
     if(value === 'Enter' && this.isValidWord()){
       this.submitForm();
       return;
@@ -169,14 +151,11 @@ export class AppComponent implements OnInit, AfterViewInit{
   public isValidWord(): boolean{
     let letters = [];
     const results = this.wyrdleForm.value;
-    console.log({results})
     for(let letter in results){
       letters.push(results[letter]);
     }
     const submittedWord = letters.join('');
-    console.log({submittedWord})
     this.validWord = submittedWord.length === this.lettersInWord && dictionary.includes(submittedWord);
-    console.log('VALID - ',this.validWord);
     return this.validWord;
   }
 
@@ -207,45 +186,71 @@ export class AppComponent implements OnInit, AfterViewInit{
     }
   }
 
+  public modalBlur(blur){
+    if(blur){
+      this.isGameWon = false;
+    }
+  }
+
   public async submitForm(){
+    let greenLetters = [];
+    let orangeLetters = [];
+    const alphabet = this.keyCommands.concat(this.keyCommands2).concat(this.keyCommands3);
+    let metaWord = Object.create({});
     let letters = [];
     const results = this.wyrdleForm.value;
-    console.log({results})
+    for(let letter in alphabet){
+      metaWord[alphabet[letter]] = 0;
+    }
     for(let letter in results){
       letters.push(results[letter]);
     }
+    for(let char in this.testWord.split('')){
+      metaWord[this.testWord.split('')[char]]+=1;
+    }
     const submittedWord = letters.join('');
-    console.log({submittedWord})
     this.validWord = dictionary.includes(submittedWord);
-    console.log('VALID - ',this.validWord)
     let perfect = true;
     let lastRow = [];
     
     /** test cells while spinning in real time */
-
+    for(let i=0; i<this.lettersInWord; i++){
+      if(this.testWord[i]===letters[i]){
+        greenLetters.push(letters[i]);
+      }
+    }
     for(let i=0; i<this.lettersInWord; i++){
       await new Promise((res) => {
         setTimeout(()=> {
           if(this.testWord[i]===letters[i]){
-            console.log(letters[i],'- TRUE')
             document.getElementById(this.controls[i]).setAttribute('class','wyrdle-cell green');
             document.getElementById(letters[i]).setAttribute('class','keyboardItem green');
             lastRow.push({
               letter:letters[i],
               color:'green'
             });
+            metaWord[letters[i]]--;
           }else if(this.testWord.includes(letters[i])){
-            console.log(letters[i],'- INCLUDED ELSEWHERE')
-            document.getElementById(this.controls[i]).setAttribute('class','wyrdle-cell orange');
-            document.getElementById(letters[i]).setAttribute('class','keyboardItem orange');
+            const allFound = greenLetters.filter(ltr => ltr === letters[i]).length === metaWord[letters[i]];
+            if(metaWord[letters[i]]>0 && !allFound){
+              document.getElementById(this.controls[i]).setAttribute('class','wyrdle-cell orange');
+              lastRow.push({
+                letter:letters[i],
+                color:'orange'
+              });
+            }else{
+              document.getElementById(this.controls[i]).setAttribute('class','wyrdle-cell gray');
+              lastRow.push({
+                letter:letters[i],
+                color:'gray'
+              });
+            }
+            if(!greenLetters.includes(letters[i])){
+              document.getElementById(letters[i]).setAttribute('class','keyboardItem orange');
+            }
             perfect = false;
-            lastRow.push({
-              letter:letters[i],
-              color:'orange'
-            });
-    
+            metaWord[letters[i]]--;
           }else if(!this.testWord.includes(letters[i])){
-            console.log(letters[i],' not included')
             perfect = false;
             document.getElementById(this.controls[i]).setAttribute('class','wyrdle-cell gray');
             document.getElementById(letters[i]).setAttribute('class','keyboardItem gray');
@@ -256,7 +261,6 @@ export class AppComponent implements OnInit, AfterViewInit{
           }
 
           this.spinningCells.push(`cell${(i+1).toString()}`)
-          console.log('spinning ', this.spinningCells)
           res(true);
           },350);
           this.changeDetector.detectChanges();
@@ -281,7 +285,6 @@ export class AppComponent implements OnInit, AfterViewInit{
   }
   public win(){
     setTimeout(()=>{
-      // alert('YOU WIN')
       this.isGameWon = true;
     },400)
   }
@@ -293,7 +296,6 @@ export class AppComponent implements OnInit, AfterViewInit{
 
   public share(){
       let shareText = `Wyrdle ${this.correctLetterWords.indexOf(this.testWord)}(${this.lettersInWord} ltrs) ${this.lastTurns.length + 1}/${this.difficulty === 'hard' ? this.lettersInWord+1 : 'unlimited'}\n`;
-      console.log('last turns ', this.lastTurns);
       this.lastTurns.forEach(turn =>{
         turn.forEach(attempt => {
           switch(attempt.color){
@@ -313,7 +315,6 @@ export class AppComponent implements OnInit, AfterViewInit{
       for(let i=0; i<this.lettersInWord; i++){
         shareText+='🟩 ';
       }
-      console.log({shareText})
       navigator.clipboard.writeText(shareText).then(() => {
           this.copySuccess = true;
           this.changeDetector.detectChanges();
