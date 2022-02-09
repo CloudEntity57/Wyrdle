@@ -4,7 +4,9 @@
         height:150vh;
     }
 }
-
+.header{
+    height:30px;
+}
 
 
 .keyboardItem{
@@ -36,10 +38,10 @@
         @media(max-width: 550px){
             font-size: 5vw;
         }
-        @media(min-width: 1975px){
+        @media(min-width: 1375px){
             font-size: 1.75vw;
         }
-        @media(min-width: 3000px){
+        @media(min-width: 2500px){
             font-size: 1vw;
         }
     }
@@ -59,10 +61,34 @@
     justify-content: space-around;
 }
 
+form{
+    max-width: 100vw;
+}
+@mixin space-out($min, $max) {
+    @for $i from $min through $max {
+      &:first-child:nth-last-child(#{$i}),
+      &:first-child:nth-last-child(#{$i}) ~ & {
+        width: 1 / $i * 60vw !important;
+        height: 1/ $i * 60vw !important;
+        font-size: calc(1/ $i * 70%)px !important;
+      }
+    }
+  }
+  @mixin vert-space-out($min, $max) {
+    @for $i from $min through $max {
+      &:first-child:nth-last-child(#{$i}),
+      &:first-child:nth-last-child(#{$i}) ~ & {
+        width: 1 / $i * 60vw !important;
+        height: 1/ $i * 60vw !important;
+        font-size: calc(1/ $i * 70%)px !important;
+      }
+    }
+  }
 
 .wyrdle-row{
     display: flex;
     margin-bottom: 10px;
+    max-width: 95vw;
 }
 .wyrdle-cell{
     text-transform: uppercase;
@@ -81,6 +107,8 @@
     }
     @media(max-width: 550px){
         font-size: 5vw;
+        @include space-out(1,20);
+
     }
     @media(min-width: 1975px){
         font-size: 1.75vw;
@@ -113,7 +141,7 @@ button{
     height: 50px;
 }
 .difficulty{
-    // padding-left:50px;
+    padding-bottom:15px;
     display:flex;
     flex-direction: column;
     background-color: #ffffff;
@@ -121,7 +149,9 @@ button{
         position:fixed;
         bottom:0px;
         left:0px;
-    }}
+        width: 100vw;
+    }
+}
 .text-center{
     display: flex;
     justify-content: space-around;
@@ -129,9 +159,11 @@ button{
 .game{
     display: inline-block;
     .game-inner{
+        max-width: 100vw;
         display: flex;
         flex-direction: column;
-        align-items: center;        }
+        align-items: center;        
+    }
     width:50%;
     @media(max-width:500px){
         width:100%;
@@ -152,28 +184,46 @@ button{
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    z-index: 2;
+    // z-index: 2;
     top:0px;
-    .modalContents{
-        padding:40px 30px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        align-items: center;
-        height:35vh;
-        width:45vw;
-        background-color:#ffffff;
-        mat-form-field{
-            width: 100%;
-            input{
-                text-align:center;
-            }
-        }
-        @media(max-width:500px){
-            width:70vw;
+}
+.modalContentsHolder{
+    position:fixed;
+    top:0px;
+    width: 100vw;
+    height: 100vh !important;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+.modalContents{
+    z-index: 50;
+    padding:40px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height:35vh;
+    width:45vw;
+    background-color:#ffffff;
+    mat-form-field{
+        width: 100%;
+        input{
+            text-align:center;
         }
     }
+    .green{
+        margin-top:15%;
+    }
+    @media(max-width:500px){
+        width:70vw;
+    }
 }
+
 .hidden{
     display:none;
+}
+.load-btn{
+    margin-bottom: 10px;
 }
