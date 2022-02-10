@@ -1,5 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { MatBottomSheet, MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
 import { dictionary }  from './utils/words';
 import { easyWords } from './utils/easywords';
 
@@ -10,8 +11,7 @@ import { easyWords } from './utils/easywords';
 })
 export class AppComponent implements OnInit{
   
-  constructor(private formBuilder: FormBuilder, private changeDetector: ChangeDetectorRef){
-  }
+  constructor(private formBuilder: FormBuilder, private changeDetector: ChangeDetectorRef, private _bottomSheet: MatBottomSheet){}
   public correctLetterWords = [];
   public testWord = "wrung";
   public validWord = false;
@@ -31,6 +31,7 @@ export class AppComponent implements OnInit{
   public isPageLoading = true;
   public isGameWon = false;
   public copySuccess = false;
+  public bottomSheetClosed = true;
 
   public difficulty = 'hard';
  
@@ -128,6 +129,7 @@ export class AppComponent implements OnInit{
   }
 
   public generateWord(index:number = null){
+    console.log('index: ', index, this.correctLetterWords)
     const randomIndex = Math.floor(Math.random() * this.correctLetterWords.length);
     this.testWord = index ? this.correctLetterWords[index] : this.correctLetterWords[randomIndex];
     if(!this.testWord){
@@ -331,6 +333,78 @@ export class AppComponent implements OnInit{
 
   public get successButtonText(){
     return this.copySuccess === true ? 'Results copied to clipboard' : 'Share';
+  }
+
+  public openBottomSheet(): void{
+    this._bottomSheet.open(BottomSheetSelector, { data: { _difficulty: this.difficulty, _lettersInWord: this.lettersInWord }}).afterDismissed().subscribe(res => {
+      console.log({res})
+      switch(res.action){
+        case 'loadGame':
+          this.gameNumber = res.data;
+          this.loadGame();
+          break;
+        case 'startOver':
+          this.startOver();
+          break;
+        case 'editDifficulty':
+          this.difficulty = res.data;
+          this.changeDetector.detectChanges();
+          break;
+      }
+    });
+  }
+
+}
+
+@Component({
+  selector: 'bottom-sheet-selections',
+  // templateUrl: './bottom-sheet.html'
+  template: `      
+  <div class="text-center">
+  <div class="game-col">
+    <h3>Difficulty</h3>
+    <section>
+      <mat-button-toggle-group [(ngModel)]="difficulty" aria-label="Difficulty">
+        <mat-button-toggle (click)="editDifficulty('hard')" value="hard">Hard ({{lettersInWord+1}} tries)</mat-button-toggle>
+        <mat-button-toggle (click)="editDifficulty('easy')" value="easy">Easy (unlimited)</mat-button-toggle>
+      </mat-button-toggle-group>
+    </section>
+    <mat-form-field>
+      <mat-label>Load a specific game #</mat-label>
+      <input [(ngModel)]="gameNumber" matInput >
+    </mat-form-field>
+    <button style="margin-bottom: 10px;" [disabled]="!gameNumber" (click)="loadGame()" mat-stroked-button color="primary">Load</button>
+    <button (click)="startOver()" mat-stroked-button>New Game</button>      
+  </div>
+</div>`
+})
+export class BottomSheetSelector{
+  constructor(@Inject(MAT_BOTTOM_SHEET_DATA) public data:{
+    _lettersInWord: number,
+    _difficulty: string
+  }, private _bottomSheetRef: MatBottomSheetRef<BottomSheetSelector>){  
+  }
+  public lettersInWord = this.data._lettersInWord;
+  public gameNumber = null;
+  public difficulty = this.data._difficulty;
+  public editDifficulty(difficulty: string){
+    this._bottomSheetRef.dismiss({
+      action: 'editDifficulty',
+      data: difficulty
+    });
+  }
+
+  public startOver(){
+    this._bottomSheetRef.dismiss({
+      action: 'startOver',
+      data: null
+    });
+  }
+  public loadGame(): void {
+      this._bottomSheetRef.dismiss({
+        action: 'loadGame',
+        data: this.gameNumber
+      });
   }
 
 }
