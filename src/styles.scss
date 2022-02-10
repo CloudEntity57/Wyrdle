@@ -66,6 +66,7 @@
 
 form{
     max-width: 100vw;
+    margin-bottom: 0px;
 }
 @mixin space-out($min, $max) {
     @for $i from $min through $max {
