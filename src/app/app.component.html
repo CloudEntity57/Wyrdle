@@ -2,9 +2,9 @@
   <div class="header"></div>
   <div class="row">
     <div class="col-lg-6 gridContainer">
-      <div class="game">
+      <div class="game-col">
         <div class="game-inner">
-          <h1>WYRDLE #{{correctLetterWords.indexOf(testWord)}}({{lettersInWord}} ltr)</h1>
+          <h1>WYRDLE {{correctLetterWords.indexOf(testWord)}}({{lettersInWord}} ltr)</h1>
           <!-- last turns -->
           <div *ngFor="let row of lastTurns" class="wyrdle-row">
             <input *ngFor="let cell of row" disabled class="wyrdle-cell" value={{cell.letter}} class="wyrdle-cell {{cell.color}}">
@@ -50,8 +50,8 @@
           </ng-container>
         </div>
       </div>
-      <div class="text-center">
-        <div class="game">
+      <div class="text-center app-options">
+        <div class="">
           <h3>Difficulty</h3>
           <section>
             <mat-button-toggle-group [(ngModel)]="difficulty" aria-label="Difficulty">
@@ -65,9 +65,11 @@
           </mat-form-field>
           <button style="margin-bottom: 10px;" [disabled]="!gameNumber" (click)="loadGame()" mat-stroked-button color="primary">Load</button>
           <button (click)="startOver()" mat-stroked-button>New Game</button>      
-
         </div>
-        </div>
+      </div>
+      <div class="displayOptions">
+        <button *ngIf="bottomSheetClosed" (click)="openBottomSheet()" mat-stroked-button>Display Options</button>
+      </div>
     </div>  
   </div>
 

@@ -1,0 +1,17 @@
+      <div class="text-center">
+        <div class="game-col">
+          <h3>Difficulty</h3>
+          <section>
+            <mat-button-toggle-group [(ngModel)]="difficulty" aria-label="Difficulty">
+              <mat-button-toggle value="hard">Hard ({{lettersInWord+1}} tries)</mat-button-toggle>
+              <mat-button-toggle value="easy">Easy (unlimited)</mat-button-toggle>
+            </mat-button-toggle-group>
+          </section>
+          <mat-form-field>
+            <mat-label>Load a specific game #</mat-label>
+            <input [(ngModel)]="gameNumber" matInput >
+          </mat-form-field>
+          <button style="margin-bottom: 10px;" [disabled]="!gameNumber" (click)="loadGame()" mat-stroked-button color="primary">Load</button>
+          <button (click)="startOver()" mat-stroked-button>New Game</button>      
+        </div>
+    </div>
