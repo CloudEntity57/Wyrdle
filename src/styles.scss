@@ -105,6 +105,10 @@ form{
         height:inherit;
         width:inherit;
     }
+    .input:disabled{
+        -webkit-text-fill-color: currentcolor;
+        opacity: 1;
+    }
 
     .mat-form-field-outline{
         height:50px;
