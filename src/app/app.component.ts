@@ -129,7 +129,6 @@ export class AppComponent implements OnInit{
   }
 
   public generateWord(index:number = null){
-    console.log('index: ', index, this.correctLetterWords)
     const randomIndex = Math.floor(Math.random() * this.correctLetterWords.length);
     this.testWord = index ? this.correctLetterWords[index] : this.correctLetterWords[randomIndex];
     if(!this.testWord){
