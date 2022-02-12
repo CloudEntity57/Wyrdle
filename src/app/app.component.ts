@@ -336,6 +336,7 @@ export class AppComponent implements OnInit{
 
   public openBottomSheet(): void{
     this._bottomSheet.open(BottomSheetSelector, { data: { _difficulty: this.difficulty, _lettersInWord: this.lettersInWord }}).afterDismissed().subscribe(res => {
+      if(!res) return;
       console.log({res})
       switch(res.action){
         case 'loadGame':
