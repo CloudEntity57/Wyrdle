@@ -326,11 +326,6 @@ export class AppComponent implements OnInit{
       })
   }
 
-  public doNothing(event){
-    console.log({event})
-    event.preventDefault();
-  }
-
   public isSpinning(item: string): boolean{
     return this.spinningCells.includes(item);
   }
