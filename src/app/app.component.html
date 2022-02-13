@@ -12,7 +12,7 @@
           <!-- current turn -->
           <form [formGroup]="wyrdleForm">
             <div class="wyrdle-row">
-              <input *ngFor="let cellIndex of letterIndexes" (keyup)="nextCell(cellIndex)" (click)="cellClicked(1)" id={{controls[cellIndex-1]}} maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning(controls[cellIndex-1])" formControlName={{controls[cellIndex-1]}} >
+              <input *ngFor="let cellIndex of letterIndexes" (keyup)="nextCell($event, cellIndex)" (click)="cellClicked(cellIndex)" id={{controls[cellIndex-1]}} maxlength="1" class="wyrdle-cell" [class.spin]="isSpinning(controls[cellIndex-1])" formControlName={{controls[cellIndex-1]}} >
             </div>
           </form>
           <!-- next turns -->

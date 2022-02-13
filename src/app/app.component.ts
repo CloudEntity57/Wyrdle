@@ -142,7 +142,12 @@ export class AppComponent implements OnInit{
     console.log('OFFICIAL WORD - ', this.testWord)
   }
 
-  public nextCell(index:number): void{
+  public nextCell(event: KeyboardEvent, index:number): void{
+    console.log({event, index})
+    if(event.code === 'Backspace' && index > 1){
+      this.currentLetter = index - 1;
+      document.getElementById(`cell${this.currentLetter}`).focus();
+    }
     if(this.wyrdleForm.get(this.controls[index-1]).value){
       document.getElementById(this.controls[index]).focus();
     }
